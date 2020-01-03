@@ -294,6 +294,7 @@ public class MyCTAdEventListener extends CTAdEventListener {
 
 ```java
     /**
+     * onReceiveAdSucceed and onReceiveAdVoSucceed callbacks only need to be processed once.
      * @param slotId  slotId
      * @param adListener callback listener
      */
@@ -301,10 +302,19 @@ public class MyCTAdEventListener extends CTAdEventListener {
         @Override
         public void onReceiveAdSucceed(PANative result) {
             if (result == null) return;
-            
-            AdvanceNative advanceNative = (AdvanceNative) result;    
+
+            AdvanceNative advanceNative = (AdvanceNative) result;
             showAd(advanceNative);
-    
+        }
+
+        @Override
+        public void onReceiveAdVoSucceed(AdsNativeVO result) {
+            //show
+            log("OpenScreen Ad Loaded.");
+            final AdvanceNative advanceNative = new AdvanceNative(context);
+            advanceNative.setNativeVO(result);
+            showAd(advanceNative);
+            super.onReceiveAdVoSucceed(result);
         }
     });
     
@@ -325,6 +335,7 @@ public class MyCTAdEventListener extends CTAdEventListener {
      * @param adListener  callback listener 
      */
 	PlainAdSDK.getNativeAds(10, "Your slotID", getContext(), new MultiAdsEventListener() {
+	
         public void onMultiNativeAdsSuccessful(List<AdvanceNative> res) {
         }
 
