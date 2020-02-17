@@ -27,11 +27,13 @@
     
     [4.3 Interstitial](#interstitial)
     
-    [4.4 Appwall](#appwall)
+    [4.4 Splash](#splash)
     
-    [4.5 Rewarded Video](#reward)
+    [4.5 Appwall](#appwall)
     
-    [4.6 Native Video](#native_video)
+    [4.6 Rewarded Video](#reward)
+    
+    [4.7 Native Video](#native_video)
     
 5. [Error Code For SDK](#error)
 
@@ -176,7 +178,7 @@ public class MyCTAdEventListener extends CTAdEventListener {
     }
 
     @Override
-    public void onReceiveAdVoSucceed(AdsNativeVO result) {
+    public void onReceiveAdVoSucceed(AdsVO result) {
     }
 
     @Override
@@ -308,9 +310,9 @@ public class MyCTAdEventListener extends CTAdEventListener {
         }
 
         @Override
-        public void onReceiveAdVoSucceed(AdsNativeVO result) {
+        public void onReceiveAdVoSucceed(AdsVO result) {
             //show
-            log("OpenScreen Ad Loaded.");
+            log("Splash Ad Loaded.");
             final AdvanceNative advanceNative = new AdvanceNative(context);
             advanceNative.setNativeVO(result);
             showAd(advanceNative);
@@ -465,9 +467,101 @@ public class MyCTAdEventListener extends CTAdEventListener {
 ![image](https://user-images.githubusercontent.com/20314643/41895879-b4536200-7955-11e8-9847-587f175c4a54.png)
 ![image](https://user-images.githubusercontent.com/20314643/41895941-e0c6ad1a-7955-11e8-9393-ed91e4a4906f.png)
 
+## <a name="splash">4.4 Splash Ads Integration</a>
+
+> Configure the AndroidManifest.xml for Interstitial
+
+```xml
+	<activity android:name="com.plainad.base.view.SplashAdActivity" />    
+```
+
+> Get Ads for cache
+
+``` java
+    PlainAdSDK.preloadSplashAd(context, Config.slotIdNative, new MyPlainAdEventListener() {
+    
+        @Override
+        public void onReceiveAdSucceed(PANative result) {
+            Log.d(TAG, "OpenScreen Ad Loaded.");
+            show();//show splash ad
+            finish();// close current activity
+        }
+    
+        @Override
+        public void onReceiveAdFailed(PANative result) {
+            if (result != null && result.getErrorsMsg() != null)
+                Log.e(TAG, "onReceiveAdFailed errorMsg=" + result.getErrorsMsg());
+            finish();// close current activity
+        }     
+    
+    
+    });
+```
+
+> Show ad from cache
+
+```java
+private void show() {
+    PlainAdSDK.showSplashAd(Config.slotIdNative, new MyPlainAdEventListener() {
+        @Override
+        public void onReceiveAdSucceed(PANative result) {
+
+        }
 
 
-## <a name="appwall">4.4 Appwall integration</a>
+        @Override
+        public void onReceiveAdFailed(PANative result) {
+
+        }
+
+        @Override
+        public void onLandPageShown(PANative result) {
+            if (result != null) {
+                SplashView splashView = (SplashView) result;
+
+                /*
+                 * There are two ways to add a custom view
+                 * inflate SplashView.getCustomParentView() or SplashView.addCustomView(view)
+                 */
+                 
+                //1
+                //LayoutInflater.from(getContext()).inflate(R.layout.custom_splash_layout, splashView.getCustomParentView(), true);
+
+                //2
+                LinearLayout linearLayout = new LinearLayout(result.getContext());
+                linearLayout.setGravity(Gravity.CENTER);
+                linearLayout.setBackgroundColor(Color.WHITE);
+                linearLayout.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, Utils.dpToPx(100)));
+                TextView textView = new TextView(result.getContext());
+                textView.setText("custom");
+                textView.setTextSize(22);
+                linearLayout.addView(textView, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+                linearLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getBaseContext(), "custom", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                splashView.addCustomView(linearLayout);
+            }
+        }
+
+        @Override
+        public void onAdClicked(PANative result) {
+
+        }
+
+        @Override
+        public void onAdClosed(PANative result) {
+
+        }
+    });
+}
+
+```
+
+
+## <a name="appwall">4.5 Appwall integration</a>
 
 > Configure the module's build.gradle for Appwall：
 
@@ -515,7 +609,7 @@ public class MyCTAdEventListener extends CTAdEventListener {
 
 
 
-## <a name="reward">4.5 Rewarded Video Ad Integration</a>
+## <a name="reward">4.6 Rewarded Video Ad Integration</a>
 
 > **Google Play Services**
 
@@ -650,7 +744,7 @@ public void videoRewarded(String rewardName, String rewardAmount) {
 ![image](https://user-images.githubusercontent.com/20314643/42371626-94e8e6a2-8142-11e8-9598-eb75de753070.png)
 
 
-## <a name="native_video">4.6 Native Video Ad Integration</a>
+## <a name="native_video">4.7 Native Video Ad Integration</a>
 
 > Configure the module's build.gradle for Native Video：
 
