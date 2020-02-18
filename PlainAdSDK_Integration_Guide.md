@@ -481,7 +481,7 @@ public class MyCTAdEventListener extends CTAdEventListener {
 > Preload Splash AD
 
 ``` java
-    PlainAdSDK.preloadSplashAd(context, Config.slotIdNative, new MyPlainAdEventListener() {
+    PlainAdSDK.preloadSplashAd(context, "Your Splash SlotID", new MyPlainAdEventListener() {
     
         @Override
         public void onReceiveAdSucceed(PANative result) {
@@ -494,7 +494,6 @@ public class MyCTAdEventListener extends CTAdEventListener {
         public void onReceiveAdFailed(PANative result) {
             if (result != null && result.getErrorsMsg() != null)
                 Log.e(TAG, "onReceiveAdFailed errorMsg=" + result.getErrorsMsg());
-            finish();// close current activity
         }     
     
     
@@ -505,8 +504,9 @@ public class MyCTAdEventListener extends CTAdEventListener {
 
 ```java
 private void show() {
-    PlainAdSDK.showSplashAd(Config.slotIdNative, new MyPlainAdEventListener() {
+    PlainAdSDK.showSplashAd("Your Splash SlotID", new MyPlainAdEventListener() {
         @Override
+	//impression, you can add customeView here showing your app name and icon (optional)
         public void onLandPageShown(PANative result) {
             if (result != null) {
                 SplashView splashView = (SplashView) result;
@@ -539,11 +539,13 @@ private void show() {
         }
 
         @Override
+	//click
         public void onAdClicked(PANative result) {
 
         }
 
         @Override
+	//close
         public void onAdClosed(PANative result) {
 
         }
