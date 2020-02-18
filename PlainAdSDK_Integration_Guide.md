@@ -170,35 +170,60 @@ Warning:
 
    
 
-​	We suggest you define a class to implement the CTAdEventListener yourself , then you can just override the methods you need when you getBanner or getNative. See the following example:
+​	We suggest you define a class to implement the AdEventListener yourself , then you can just override the methods you need when you getBanner or getNative. See the following example:
 
 ``` java
-public class MyCTAdEventListener extends CTAdEventListener {
+public class MyPlainAdEventListener extends AdEventListener {
+
+    /**
+     * Get ad success
+     * @param result Non-persistent object PANative
+     */
     @Override
     public void onReceiveAdSucceed(PANative result) {
     }
 
+    /**
+     * Get ad success
+     * @param result Persistent object AdsVO
+     */
     @Override
     public void onReceiveAdVoSucceed(AdsVO result) {
     }
-
-    @Override
-    public void onInterstitialLoadSucceed(PANative result) {
-    }
-
+    
+    /**
+     * Get ad failed Got data fail + Json fail + Rendering fail
+     */
     @Override
     public void onReceiveAdFailed(PANative result) {
         Log.i("sdksample", "==error==" + result.getErrorsMsg());
     }
-
+    
+    /**
+     * Ad display success
+     */
     @Override
-    public void onLandpageShown(PANative result) {
+    public void onShowSucceed(PANative result) {
     }
 
+  
+    /**
+     * Go to landing page
+     */
+    @Override
+    public void onLandPageShown(PANative result) {
+    }
+
+    /**
+     * Ad was clicked
+     */
     @Override
     public void onAdClicked(PANative result) {
     }
 
+    /**
+     * Ad is closed
+     */
     @Override
     public void onAdClosed(PANative result) {
     }
@@ -442,7 +467,7 @@ public class MyCTAdEventListener extends CTAdEventListener {
         }
 
         @Override 
-        public void onLandpageShown(PANative result) {
+        public void onLandPageShown(PANative result) {
             super.onLandpageShown(result);
             Log.e(TAG, "onLandpageShown:");
         }
@@ -507,7 +532,7 @@ private void show() {
     PlainAdSDK.showSplashAd("Your Splash SlotID", new MyPlainAdEventListener() {
         @Override
 	//impression, you can add customeView here showing your app name and icon (optional)
-        public void onLandPageShown(PANative result) {
+        public void onShowSucceed(PANative result) {
             if (result != null) {
                 SplashView splashView = (SplashView) result;
 
