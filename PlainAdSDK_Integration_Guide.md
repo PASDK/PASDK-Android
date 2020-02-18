@@ -19,6 +19,7 @@
 4. [Request Ad](#request)
 
     [4.1 Native](#native)
+    
     * [Element-Native](#common)
     * [Element-Native with adCache](#cache)
     * [Element-Native for Multiple](#multi)
@@ -469,20 +470,22 @@ public class MyCTAdEventListener extends CTAdEventListener {
 
 ## <a name="splash">4.4 Splash Ads Integration</a>
 
-> Configure the AndroidManifest.xml for Interstitial
+> Configure the AndroidManifest.xml for Splash AD
 
 ```xml
 	<activity android:name="com.plainad.base.view.SplashAdActivity" />    
 ```
 
-> Get Ads for cache
+> You need to add your own launch screen first. Then preload and show Splash AD.
+>
+> Preload Splash AD
 
 ``` java
     PlainAdSDK.preloadSplashAd(context, Config.slotIdNative, new MyPlainAdEventListener() {
     
         @Override
         public void onReceiveAdSucceed(PANative result) {
-            Log.d(TAG, "OpenScreen Ad Loaded.");
+            Log.d(TAG, "Splash Ad Loaded.");
             show();//show splash ad
             finish();// close current activity
         }
@@ -503,17 +506,6 @@ public class MyCTAdEventListener extends CTAdEventListener {
 ```java
 private void show() {
     PlainAdSDK.showSplashAd(Config.slotIdNative, new MyPlainAdEventListener() {
-        @Override
-        public void onReceiveAdSucceed(PANative result) {
-
-        }
-
-
-        @Override
-        public void onReceiveAdFailed(PANative result) {
-
-        }
-
         @Override
         public void onLandPageShown(PANative result) {
             if (result != null) {
