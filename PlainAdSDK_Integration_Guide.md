@@ -501,82 +501,81 @@ public class MyPlainAdEventListener extends AdEventListener {
 	<activity android:name="com.plainad.base.view.SplashAdActivity" />    
 ```
 
-> You need to add your own launch screen first. Then preload and show Splash AD.
->
-> Preload Splash AD
+> Get Splash AD
 
 ``` java
-    PlainAdSDK.preloadSplashAd(context, "Your Splash SlotID", new MyPlainAdEventListener() {
-    
-        @Override
-        public void onReceiveAdSucceed(PANative result) {
-            Log.d(TAG, "Splash Ad Loaded.");
-            show();//show splash ad
-            finish();// close current activity
+/**
+ * @param context    context
+ * @param slotId     slotId
+ * @param listener callback listener
+ * @param timeOut timeOut  timeout time (in milliseconds)
+ */
+
+PlainAdSDK.getSplashAd(this, Config.slotIdNative, new MyPlainAdEventListener() {
+
+
+    @Override
+    public void onReceiveAdSucceed(PANative result) {
+        Log.d(TAG, "Splash Ad Loaded.");
+        if (!isFinishing()) {
+            finish();
         }
-    
-        @Override
-        public void onReceiveAdFailed(PANative result) {
-            if (result != null && result.getErrorsMsg() != null)
-                Log.e(TAG, "onReceiveAdFailed errorMsg=" + result.getErrorsMsg());
-        }     
-    
-    
-    });
-```
+    }
 
-> Show ad from cache
+    @Override
+    public void onReceiveAdFailed(PANative result) {
+        if (result != null && result.getErrorsMsg() != null)
+            Log.e(TAG, "onReceiveAdFailed errorMsg=" + result.getErrorsMsg());
+    }
 
-```java
-private void show() {
-    PlainAdSDK.showSplashAd("Your Splash SlotID", new MyPlainAdEventListener() {
-        @Override
-	//impression, you can add customeView here showing your app name and icon (optional)
-        public void onShowSucceed(PANative result) {
-            if (result != null) {
-                SplashView splashView = (SplashView) result;
+    @Override
+    public void onShowSucceed(PANative result) {
+        Log.d(TAG, "onShowSucceed");
+        if (result != null) {
+            SplashView splashView = (SplashView) result;
 
-                /*
-                 * There are two ways to add a custom view
-                 * inflate SplashView.getCustomParentView() or SplashView.addCustomView(view)
-                 */
-                 
-                //1
-                //LayoutInflater.from(getContext()).inflate(R.layout.custom_splash_layout, splashView.getCustomParentView(), true);
+            /*
+             * There are two ways to add a custom view
+             * inflate SplashView.getCustomParentView() or SplashView.addCustomView(view)
+             */
+            //1
+            //LayoutInflater.from(getContext()).inflate(R.layout.custom_splash_layout, splashView.getCustomParentView(), true);
 
-                //2
-                LinearLayout linearLayout = new LinearLayout(result.getContext());
-                linearLayout.setGravity(Gravity.CENTER);
-                linearLayout.setBackgroundColor(Color.WHITE);
-                linearLayout.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, Utils.dpToPx(100)));
-                TextView textView = new TextView(result.getContext());
-                textView.setText("custom");
-                textView.setTextSize(22);
-                linearLayout.addView(textView, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-                linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getBaseContext(), "custom", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                splashView.addCustomView(linearLayout);
-            }
+            //2
+            LinearLayout linearLayout = new LinearLayout(result.getContext());
+            linearLayout.setGravity(Gravity.CENTER);
+            linearLayout.setBackgroundColor(Color.WHITE);
+            linearLayout.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, Utils.dpToPx(100)));
+            TextView textView = new TextView(result.getContext());
+            textView.setText("custom");
+            textView.setTextSize(22);
+            linearLayout.addView(textView, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getBaseContext(), "custom", Toast.LENGTH_SHORT).show();
+                }
+            });
+            splashView.addCustomView(linearLayout);
         }
+    }
 
-        @Override
-	//click
-        public void onAdClicked(PANative result) {
+    @Override
+    public void onLandPageShown(PANative result) {
+        Log.d(TAG, "onLandPageShown");
+    }
 
-        }
+    @Override
+    public void onAdClicked(PANative result) {
+        Log.d(TAG, "onAdClicked");
+    }
 
-        @Override
-	//close
-        public void onAdClosed(PANative result) {
+    @Override
+    public void onAdClosed(PANative result) {
+        Log.d(TAG, "onAdClosed");
+    }
 
-        }
-    });
-}
-
+}, TIME_OUT);
 ```
 
 
