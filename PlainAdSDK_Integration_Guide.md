@@ -75,8 +75,11 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 	<!-- Necessary -->
-	<activity android:name="com.plainad.base.view.InnerWebViewActivity" />
-	
+	<activity android:name="com.plainad.kern.view.InnerWebViewActivity" />
+	<provider
+            android:authorities="${applicationId}.xxprovider"
+            android:name="com.plainad.kern.core.PlainAdProvider"
+            android:exported="false"/>
 
 	<!--If your targetSdkVersion is 28, you need update <application> as follows:-->
   	<application
@@ -250,7 +253,7 @@ public class MyPlainAdEventListener extends AdEventListener {
      * @param context    context
      * @param adListener callback listener 
      */
- 	PlainAdSDK.getNativeAd("Your slotID", context, new MyCTAdEventListener(){
+ 	PlainAdSDK.getNativeAd("Your slotID", context, new MyPlainAdEventListener(){
         @Override
         public void onReceiveAdSucceed(PANative result) {
             if (result == null) {
@@ -326,7 +329,7 @@ public class MyPlainAdEventListener extends AdEventListener {
      * @param slotId  slotId
      * @param adListener callback listener
      */
-    PlainAdSDK.getNativeAdForCache("Your slotID", new MyCTAdEventListener() {
+    PlainAdSDK.getNativeAdForCache("Your slotID", new MyPlainAdEventListener() {
         @Override
         public void onReceiveAdSucceed(PANative result) {
             if (result == null) return;
@@ -395,7 +398,7 @@ public class MyPlainAdEventListener extends AdEventListener {
      							AdSize.AD_SIZE_300X250;
      * @param adListener        callback listener 
      */
-	 PlainAdSDK.getBannerAd(context, "Your slotID", adSize,new MyCTAdEventListener() {
+	 PlainAdSDK.getBannerAd(context, "Your slotID", adSize,new MyPlainAdEventListener() {
          @Override
          public void onReceiveAdSucceed(PANative result) {
              if (result != null) {
@@ -442,7 +445,7 @@ public class MyPlainAdEventListener extends AdEventListener {
 > Configure the AndroidManifest.xml for Interstitial
 
 ```xml
-	<activity android:name="com.plainad.base.view.InterstitialActivity" />    
+	<activity android:name="com.plainad.kern.view.InterstitialActivity" />    
 ```
 
 > The method to show Interstitial Ads
@@ -453,7 +456,7 @@ public class MyPlainAdEventListener extends AdEventListener {
      * @param slotId            plainad id
      * @param adListener        callback listener 
      */
-    PlainAdSDK.preloadInterstitialAd(context, "Your slotID",new MyCTAdEventListener() {
+    PlainAdSDK.preloadInterstitialAd(context, "Your slotID",new MyPlainAdEventListener() {
                     
         @Override
         public void onReceiveAdSucceed(PANative result) {              
@@ -498,7 +501,7 @@ public class MyPlainAdEventListener extends AdEventListener {
 > Configure the AndroidManifest.xml for Splash AD
 
 ```xml
-	<activity android:name="com.plainad.base.view.SplashAdActivity" />    
+	<activity android:name="com.plainad.kern.view.SplashAdActivity" />    
 ```
 
 > Get Splash AD
