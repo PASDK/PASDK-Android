@@ -102,6 +102,12 @@
     PlainAdSDK.initialize(context, "Your slotID");
 ```
 
+**Pass in app to enter background event.**
+
+```java
+    PlainAdSDK.setBackgroundRun(true);//Enter the background to fill in true and back to the foreground to fill in false.
+```
+
 **Set schema https**
 
 ```java
